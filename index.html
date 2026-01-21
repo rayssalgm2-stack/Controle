@@ -586,16 +586,23 @@
     URL.revokeObjectURL(url);
   }
   function isRayssaOliveiraName(name){
-    const n = normalizeStr(name).toLowerCase();
-    return n === "rayssa" || n === "rayssa oliveira";
-  }
-  function parseAnalystBucket(analyst){
-    const raw = normalizeStr(analyst);
-    if(!raw) return null;
-    const parts = raw.split("/").map(s => s.trim()).filter(Boolean);
-    if(parts.length >= 2 && parts[0].toLowerCase().startsWith("rayssa oliveira")) return parts[1];
-    if(!isRayssaOLIVEIRAName(raw)) return raw;
-    return null;
+  const n = normalizeStr(name).toLowerCase();
+  return n === "rayssa" || n === "rayssa oliveira" || n === "rayssa oliveira silva"; // (opcional)
+}
+
+function parseAnalystBucket(analyst){
+  const raw = normalizeStr(analyst);
+  if(!raw) return null;
+
+  const parts = raw.split("/").map(s => s.trim()).filter(Boolean);
+
+  // se vier "Rayssa/Outro", pega o "Outro"
+  if(parts.length >= 2 && parts[0].toLowerCase().startsWith("rayssa")) return parts[1];
+
+  // se não for Rayssa/Rayssa Oliveira, vira um bucket próprio
+  if(!isRayssaOliveiraName(raw)) return raw;
+
+  return null;
   }
   function codStartsWith9(cod){
     const v = normalizeStr(cod);
@@ -1418,6 +1425,7 @@
 </script>
 </body>
 </html>
+
 
 
 

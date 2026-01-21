@@ -1031,7 +1031,7 @@
 
   // ===== AUDIT / DIFF =====
   function askEditorName(fallback){
-    const typed = normalizeStr(prompt("Quem está editando? (ex.: Rayssa, Tatiane)"));
+    const typed = normalizeStr(prompt("Quem está editando? (ex.: Rayssa)"));
     return typed || normalizeStr(fallback) || "Desconhecido";
   }
   function diffSummary(oldRec, newRec){
@@ -1418,3 +1418,4 @@
 </script>
 </body>
 </html>
+

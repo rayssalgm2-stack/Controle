@@ -403,7 +403,7 @@
           </div>
           <div class="field">
             <label>Responsável</label>
-            <input type="text" id="tOwner" value="Rayssa" required />
+            <input type="text" id="tOwner" value="Rayssa Oliveira" required />
           </div>
           <div class="field">
             <label>Status do chamado</label>
@@ -585,7 +585,7 @@
     a.click(); a.remove();
     URL.revokeObjectURL(url);
   }
-  function isRayssaName(name){
+  function isRayssaOliveiraName(name){
     const n = normalizeStr(name).toLowerCase();
     return n === "rayssa" || n === "rayssa oliveira";
   }
@@ -593,8 +593,8 @@
     const raw = normalizeStr(analyst);
     if(!raw) return null;
     const parts = raw.split("/").map(s => s.trim()).filter(Boolean);
-    if(parts.length >= 2 && parts[0].toLowerCase().startsWith("rayssa")) return parts[1];
-    if(!isRayssaName(raw)) return raw;
+    if(parts.length >= 2 && parts[0].toLowerCase().startsWith("rayssa oliveira")) return parts[1];
+    if(!isRayssaOLIVEIRAName(raw)) return raw;
     return null;
   }
   function codStartsWith9(cod){
@@ -671,8 +671,8 @@
       } else if(fieldName === "Analista"){
         input = document.createElement("input");
         input.type = "text";
-        input.value = "Rayssa";
-        input.placeholder = "Rayssa / Nome";
+        input.value = "Rayssa Oliveira";
+        input.placeholder = "Rayssa Oliveira / Nome";
       } else if(fieldName === "STATUS"){
         input = document.createElement("select");
         for(const optVal of state.statusOptions){
@@ -795,7 +795,7 @@
       const el = getInput(f);
       if(!el) continue;
       if(f === "DATA") el.value = todayISO();
-      else if(f === "Analista") el.value = "Rayssa";
+      else if(f === "Analista") el.value = "Rayssa Oliveira";
       else if(f === "STATUS") el.value = state.statusOptions[0] || "";
       else el.value = "";
     }
@@ -827,7 +827,7 @@
     const existing = state.tickets.find(t => normKey(t.num) === normKey(numChamado)) || null;
     if(existing){
       existing.date = normalizeStr(record["DATA"]) || todayISO();
-      existing.owner = normalizeStr(record["Analista"]) || "Rayssa";
+      existing.owner = normalizeStr(record["Analista"]) || "Rayssa Oliveira";
       existing.linkedCTE = normalizeStr(record["CT-E/SNF"]);
       existing.updatedAt = new Date().toISOString();
       return;
@@ -838,7 +838,7 @@
       date: normalizeStr(record["DATA"]) || todayISO(),
       title: `Chamado ${numChamado} • CT-E/SNF ${normalizeStr(record["CT-E/SNF"])}`,
       desc: `Criado automaticamente a partir do registro (COD.: ${cod}).`,
-      owner: normalizeStr(record["Analista"]) || "Rayssa",
+      owner: normalizeStr(record["Analista"]) || "Rayssa Oliveira",
       status: "ABERTO",
       linkedCTE: normalizeStr(record["CT-E/SNF"]),
       createdAt: new Date().toISOString(),
@@ -1273,7 +1273,7 @@
 
   // ===== TICKETS FORM =====
   $("#tDate").value = todayISO();
-  $("#tOwner").value = "Rayssa";
+  $("#tOwner").value = "Rayssa Oliveira";
   $("#ticketSearch").addEventListener("input", renderAll);
   $("#ticketFilter").addEventListener("change", renderAll);
 
@@ -1309,7 +1309,7 @@
     $("#tDate").value = todayISO();
     $("#tTitle").value = "";
     $("#tDesc").value = "";
-    $("#tOwner").value = "Rayssa";
+    $("#tOwner").value = "Rayssa Oliveira";
     $("#tStatus").value = "ABERTO";
     renderAll();
   });
@@ -1319,7 +1319,7 @@
     $("#tDate").value = todayISO();
     $("#tTitle").value = "";
     $("#tDesc").value = "";
-    $("#tOwner").value = "Rayssa";
+    $("#tOwner").value = "Rayssa Oliveira";
     $("#tStatus").value = "ABERTO";
   });
 
@@ -1418,4 +1418,5 @@
 </script>
 </body>
 </html>
+
 

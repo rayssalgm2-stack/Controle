@@ -1,0 +1,1420 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Controle de Acompanhamento</title>
+
+  <style>
+    :root{
+      --r2: 18px; --r3: 22px;
+      --shadow: 0 18px 60px rgba(0,0,0,.18);
+      --bg: #0b0f17; --bg2:#070a10;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.085);
+      --border: rgba(255,255,255,.14);
+      --text: #f6f7fb;
+      --muted: rgba(246,247,251,.72);
+      --accent1:#fbcfe8;
+      --accent2:#7c3aed;
+      --gold: rgba(255,215,160,.9);
+      --silver: rgba(232,236,245,.92);
+      --ok:#2dd4bf;
+      --warn:#fbbf24;
+      --danger:#fb7185;
+      --focus: rgba(124,58,237,.24);
+      --focus2: rgba(251,207,232,.18);
+    }
+    html[data-theme="light"]{
+      --bg: #fafafa; --bg2:#ffffff;
+      --card: rgba(0,0,0,.035);
+      --card2: rgba(0,0,0,.045);
+      --border: rgba(0,0,0,.10);
+      --text: #0b0b12;
+      --muted: rgba(11,11,18,.62);
+      --shadow: 0 18px 55px rgba(0,0,0,.10);
+      --focus: rgba(109,40,217,.16);
+      --focus2: rgba(251,207,232,.22);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 12% -8%, color-mix(in srgb, var(--accent2) 32%, transparent), transparent 60%),
+        radial-gradient(900px 520px at 88% 6%, color-mix(in srgb, var(--accent1) 35%, transparent), transparent 60%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+      letter-spacing: .2px;
+    }
+
+    header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg2) 78%, transparent);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:18px;}
+    .top{display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; justify-content:space-between;}
+    h1{margin:0; font-size:18px; font-weight:900; display:flex; align-items:center; gap:10px;}
+    .mark{width:12px; height:12px; border-radius:999px; background: linear-gradient(135deg, var(--accent1), var(--accent2));}
+    .sub{margin-top:6px; color:var(--muted); font-size:13px}
+
+    .pills{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--card);
+    }
+    .pill b{color: var(--text)}
+    .pill.danger{
+      border-color: color-mix(in srgb, var(--danger) 55%, var(--border));
+      background: color-mix(in srgb, var(--danger) 16%, transparent);
+      color: color-mix(in srgb, var(--danger) 30%, var(--text));
+    }
+
+    .themeBtn{
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--card2), var(--card));
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 900;
+      display:inline-flex; align-items:center; gap:8px;
+      transition:.15s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    .themeIcon{
+      width: 22px; height: 22px; border-radius: 999px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      font-size: 13px;
+    }
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+    .tab{
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 900;
+      font-size: 13px;
+      transition: .15s ease;
+      white-space: nowrap;
+    }
+    .tab.active{
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--accent1) 35%, var(--border));
+      background:
+        linear-gradient(135deg,
+          color-mix(in srgb, var(--accent1) 18%, transparent),
+          color-mix(in srgb, var(--accent2) 14%, transparent)),
+        var(--card2);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent1) 12%, transparent);
+    }
+
+    .grid{display:grid; grid-template-columns: 1fr; gap:14px; margin-top:16px;}
+    @media (min-width: 980px){ .grid{grid-template-columns: 460px 1fr;} }
+
+    .card{
+      border: 1px solid var(--border);
+      border-radius: var(--r3);
+      padding: 14px;
+      background: linear-gradient(180deg, var(--card2), var(--card));
+      box-shadow: var(--shadow);
+    }
+    .card h2{margin:0 0 10px; font-size:14px; font-weight:950; display:flex; align-items:center; gap:10px;}
+    .spark{width:10px;height:10px;border-radius:999px;background: linear-gradient(180deg, var(--gold), var(--silver));}
+    .hr{height:1px; background: var(--border); margin:12px 0}
+
+    .hint{
+      padding: 12px;
+      border-radius: var(--r2);
+      border: 1px dashed color-mix(in srgb, var(--accent2) 25%, var(--border));
+      background:
+        linear-gradient(135deg,
+          color-mix(in srgb, var(--accent1) 14%, transparent),
+          color-mix(in srgb, var(--accent2) 10%, transparent)),
+        var(--card);
+      color: color-mix(in srgb, var(--text) 92%, var(--muted));
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    form{display:grid; gap:10px}
+    .field{display:grid; gap:6px}
+    label{font-size:12px; font-weight:900; color: var(--muted)}
+    input, select, textarea{
+      width: 100%;
+      border-radius: var(--r2);
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg2) 75%, var(--card));
+      color: var(--text);
+      padding: 10px 11px;
+      outline:none;
+      transition:.15s ease;
+    }
+    textarea{min-height:90px; resize:vertical}
+    input:focus, select:focus, textarea:focus{
+      border-color: color-mix(in srgb, var(--accent1) 35%, var(--border));
+      box-shadow: 0 0 0 4px var(--focus2), 0 0 0 1px var(--focus) inset;
+    }
+    input:disabled, select:disabled, textarea:disabled{opacity:.55; cursor:not-allowed;}
+
+    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+    button{
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--card2), var(--card));
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 950;
+      transition:.15s ease;
+      white-space: nowrap;
+    }
+    button.primary{
+      border-color: color-mix(in srgb, var(--accent1) 40%, var(--border));
+      background:
+        linear-gradient(135deg,
+          color-mix(in srgb, var(--accent1) 22%, transparent),
+          color-mix(in srgb, var(--accent2) 14%, transparent)),
+        var(--card2);
+    }
+    button.ok{
+      border-color: color-mix(in srgb, var(--ok) 38%, var(--border));
+      background: color-mix(in srgb, var(--ok) 12%, transparent);
+    }
+    button.danger{
+      border-color: color-mix(in srgb, var(--danger) 40%, var(--border));
+      background: color-mix(in srgb, var(--danger) 12%, transparent);
+    }
+
+    .tools{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .tools input{max-width:260px}
+
+    .tableWrap{
+      max-height: 560px;
+      overflow:auto;
+      border-radius: var(--r2);
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg2) 70%, var(--card));
+    }
+    table{width:100%; border-collapse:collapse; font-size:12px}
+    th, td{
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      padding: 10px 8px;
+      text-align:left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+    th{
+      position:sticky; top:0; z-index:1;
+      color: color-mix(in srgb, var(--text) 85%, var(--muted));
+      font-weight: 950;
+      background: color-mix(in srgb, var(--bg2) 88%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .tag{
+      display:inline-flex; align-items:center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 950;
+      border: 1px solid var(--border);
+      background: var(--card);
+      max-width: 420px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .tag.pending{ border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); background: color-mix(in srgb, var(--danger) 14%, transparent); }
+    .tag.done{ border-color: color-mix(in srgb, var(--ok) 40%, var(--border)); background: color-mix(in srgb, var(--ok) 12%, transparent); }
+    .tag.other{ border-color: color-mix(in srgb, var(--warn) 40%, var(--border)); background: color-mix(in srgb, var(--warn) 12%, transparent); }
+
+    .warningBox{
+      padding: 12px;
+      border-radius: var(--r2);
+      border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--border));
+      background: color-mix(in srgb, var(--danger) 10%, transparent);
+      display:none;
+      font-size: 12px;
+      color: color-mix(in srgb, var(--text) 92%, var(--muted));
+    }
+
+    .small{font-size:11px; color: var(--muted)}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1><span class="mark"></span> Controle de Acompanhamento</h1>
+        <div class="sub">Cadastro • Pendências • Histórico • Chamados • Analistas • Config</div>
+      </div>
+
+      <div class="pills">
+        <button id="themeToggle" class="themeBtn" type="button" title="Alternar tema">
+          <span id="themeIcon" class="themeIcon">🌙</span>
+          <span id="themeLabel">Escuro</span>
+        </button>
+
+        <span id="pendingPill" class="pill"><b>0</b> pendências</span>
+        <span id="ticketsPill" class="pill"><b>0</b> chamados abertos</span>
+        <span id="dailyPill" class="pill"><b>Backup</b> pendente</span>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-view="cadastro" type="button">Cadastro</button>
+      <button class="tab" data-view="pendencias" type="button">Pendências</button>
+      <button class="tab" data-view="historico" type="button">Histórico</button>
+      <button class="tab" data-view="chamados" type="button">Chamados</button>
+      <button class="tab" data-view="analistas" type="button">Analistas</button>
+      <button class="tab" data-view="config" type="button">Config</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- Banner backup diário (injetado via JS quando necessário) -->
+
+  <div id="viewCadastro" class="grid">
+    <section class="card">
+      <h2><span class="spark"></span> Novo Registro</h2>
+
+      <div class="hint">
+        Regras: <b>Pedido só após RC</b> • <b>Folha só após Pedido</b> • <b>Nº Chamado só se COD. começar com 9</b>.
+        Edição livre + auditoria (quem editou e quando).
+      </div>
+
+      <div class="hr"></div>
+
+      <div id="dupBox" class="warningBox">
+        <b>Atenção:</b> já existe registro com <b>CT-E/SNF</b> e <b>Transportadora</b> iguais. Para salvar mesmo assim, justifique abaixo.
+      </div>
+
+      <form id="form"></form>
+
+      <div id="justField" class="field" style="display:none">
+        <label>Justificativa (duplicidade)</label>
+        <textarea id="dupJust" placeholder="Explique por que está registrando novamente..."></textarea>
+      </div>
+
+      <div class="btns">
+        <button class="primary" id="btnSalvar" type="button">Salvar Registro</button>
+        <button id="btnLimpar" type="button">Limpar</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="btns">
+        <button class="ok" id="btnDailyBackupCSV" type="button">Backup do dia (CSV)</button>
+        <button class="ok" id="btnExportRegCSV" type="button">Baixar Registros (CSV)</button>
+        <button id="btnExportAllJSON" type="button">Baixar Tudo (JSON)</button>
+      </div>
+
+      <p class="small">
+        Resp Aprovação não é obrigatório. RC/Pedido/Folha não são obrigatórios no primeiro registro, mas o sistema não deixa “pular” a sequência.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2><span class="spark"></span> Prévia</h2>
+      <div class="tools">
+        <input id="quickSearch" placeholder="Buscar (qualquer campo)..." />
+        <button class="ok" id="btnExportCSV" type="button">Exportar CSV</button>
+        <button id="btnExportJSON" type="button">Backup JSON</button>
+        <label class="tab" style="cursor:pointer">
+          Importar JSON
+          <input id="importJSON" type="file" accept="application/json" style="display:none" />
+        </label>
+      </div>
+      <div class="hr"></div>
+      <div class="tableWrap"><table id="tablePreview"></table></div>
+    </section>
+  </div>
+
+  <div id="viewPendencias" style="display:none">
+    <section class="card">
+      <h2><span class="spark"></span> Pendências</h2>
+      <div class="tools">
+        <input id="pendSearch" placeholder="Buscar nas pendências..." />
+        <input id="pendDate" type="date" />
+        <button id="btnLimparPendDate" type="button">Limpar data</button>
+        <button class="ok" id="btnExportPendCSV" type="button">Baixar Pendências (CSV)</button>
+      </div>
+      <div class="hr"></div>
+      <div class="tableWrap"><table id="tablePendencias"></table></div>
+    </section>
+  </div>
+
+  <div id="viewHistorico" style="display:none">
+    <section class="card">
+      <h2><span class="spark"></span> Histórico</h2>
+      <div class="tools">
+        <input id="histSearch" placeholder="Buscar no histórico..." />
+        <input id="histFrom" type="date" />
+        <input id="histTo" type="date" />
+        <button id="btnLimparHistDate" type="button">Limpar datas</button>
+        <button class="ok" id="btnExportHistCSV" type="button">Baixar Histórico (CSV)</button>
+        <button class="danger" id="btnApagarTudo" type="button">Apagar registros</button>
+      </div>
+      <div class="hr"></div>
+      <div class="tableWrap"><table id="tableHistorico"></table></div>
+    </section>
+  </div>
+
+  <div id="viewChamados" style="display:none">
+    <div class="grid">
+      <section class="card">
+        <h2><span class="spark"></span> Abrir chamado manual</h2>
+        <div class="hint">
+          Chamados também podem ser criados automaticamente quando você preenche <b>Nº Chamado</b> em uma nota cujo <b>COD.</b> começa com 9.
+        </div>
+        <div class="hr"></div>
+
+        <form id="ticketForm">
+          <div class="field">
+            <label>Nº Chamado</label>
+            <input type="text" id="tNum" placeholder="Ex.: 123456" required />
+          </div>
+          <div class="field">
+            <label>Data de abertura</label>
+            <input type="date" id="tDate" required />
+          </div>
+          <div class="field">
+            <label>Título</label>
+            <input type="text" id="tTitle" placeholder="Ex.: Aprovação pendente" required />
+          </div>
+          <div class="field">
+            <label>Descrição</label>
+            <textarea id="tDesc" placeholder="Detalhes..." required></textarea>
+          </div>
+          <div class="field">
+            <label>Responsável</label>
+            <input type="text" id="tOwner" value="Rayssa" required />
+          </div>
+          <div class="field">
+            <label>Status do chamado</label>
+            <select id="tStatus" required>
+              <option value="ABERTO">ABERTO</option>
+              <option value="EM ANDAMENTO">EM ANDAMENTO</option>
+              <option value="AGUARDANDO RETORNO">AGUARDANDO RETORNO</option>
+              <option value="FECHADO">FECHADO</option>
+            </select>
+          </div>
+          <div class="btns">
+            <button class="primary" id="btnTicketSave" type="button">Salvar chamado</button>
+            <button id="btnTicketClear" type="button">Limpar</button>
+          </div>
+
+          <div class="hr"></div>
+          <div class="btns">
+            <button class="ok" id="btnExportTicketsCSV" type="button">Baixar Chamados (CSV)</button>
+            <button id="btnExportAllJSON2" type="button">Baixar Tudo (JSON)</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2><span class="spark"></span> Chamados</h2>
+        <div class="tools">
+          <input id="ticketSearch" placeholder="Buscar chamados..." />
+          <select id="ticketFilter">
+            <option value="TODOS">Todos</option>
+            <option value="ABERTOS">Somente abertos</option>
+            <option value="FECHADOS">Somente fechados</option>
+          </select>
+        </div>
+        <div class="hr"></div>
+        <div class="tableWrap"><table id="tableTickets"></table></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="viewAnalistas" style="display:none">
+    <div class="grid">
+      <section class="card">
+        <h2><span class="spark"></span> Analistas detectados</h2>
+        <div class="hint">
+          Se aparecer no campo Analista algo além de <b>Rayssa</b>/<b>Rayssa Oliveira</b>, o sistema cria automaticamente uma área para esse analista.
+          Se vier <b>Rayssa/Outro</b>, ele identifica o <b>Outro</b> e separa.
+        </div>
+        <div class="hr"></div>
+        <div class="tools" id="analystButtons"></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="spark"></span> Registros do analista</h2>
+        <div class="tools">
+          <input id="analystSearch" placeholder="Buscar..." />
+          <input id="analystDate" type="date" />
+          <button id="btnAnalystClearDate" type="button">Limpar data</button>
+          <button class="ok" id="btnExportAnalystCSV" type="button">Baixar Analistas (CSV)</button>
+        </div>
+        <div class="hr"></div>
+        <div class="tableWrap"><table id="tableAnalyst"></table></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="viewConfig" style="display:none">
+    <section class="card">
+      <h2><span class="spark"></span> Configuração</h2>
+      <div class="hint">
+        Aqui você pode adicionar novos <b>Status</b> e ajustar quais contam como <b>Pendência</b>.
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <label>Lista de STATUS (1 por linha)</label>
+        <textarea id="statusListText"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Status que contam como PENDÊNCIA (1 por linha)</label>
+        <textarea id="pendingStatusText"></textarea>
+      </div>
+
+      <div class="btns">
+        <button class="primary" id="btnApplyConfig" type="button">Aplicar Status</button>
+        <button id="btnResetStatus" type="button">Restaurar status</button>
+        <button class="ok" id="btnExportAllJSON3" type="button">Baixar Tudo (JSON)</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  // ===== THEME =====
+  const THEME_KEY = "controle_theme";
+  function setTheme(theme){
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_KEY, theme);
+    const icon = document.getElementById("themeIcon");
+    const label = document.getElementById("themeLabel");
+    if(theme === "light"){ icon.textContent = "☀️"; label.textContent = "Claro"; }
+    else { icon.textContent = "🌙"; label.textContent = "Escuro"; }
+  }
+  setTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
+  document.getElementById("themeToggle").addEventListener("click", ()=>{
+    const cur = document.documentElement.getAttribute("data-theme");
+    setTheme(cur === "dark" ? "light" : "dark");
+  });
+
+  // ===== STORAGE =====
+  const STORE_KEY = "controle_acompanhamento_v8";
+
+  // ===== BACKUP DIÁRIO (CSV) =====
+  const DAILY_BACKUP_KEY = "controle_daily_backup_done_csv";
+
+  // ===== FIELDS (EXACT ORDER) =====
+  const FIELDS = [
+    "Analista","DATA","CT-E/SNF","Tipo Serviço","Transportadora","Valor R$",
+    "Num_RC","Resp Aprovação","Num_Pedido","Num_Folha","STATUS","COD.","Nº Chamado"
+  ];
+
+  // ===== AUDIT FIELDS =====
+  const AUDIT_FIELDS = ["Editado_por","Editado_em","Editado_nº","Histórico_edits"];
+
+  const DEFAULT_STATUS = [
+    "PENDENTE DE RC",
+    "PENDENTE DE ENVIAR E-MAIL",
+    "AG. APROVAÇÃO",
+    "AG SERVIÇO",
+    "AG. FOLHA",
+    "PENDENTE E-MAIL APROVAÇÃO",
+    "AG APRO. FOLHA",
+    "AG CONCLUSÃO",
+    "FINALIZADO, AGUARDANDO ANALISTA",
+    "Encaminhado ao Fiscal"
+  ];
+
+  const DEFAULT_PENDING = [
+    "PENDENTE DE RC",
+    "PENDENTE DE ENVIAR E-MAIL",
+    "AG. APROVAÇÃO",
+    "AG SERVIÇO",
+    "AG. FOLHA",
+    "PENDENTE E-MAIL APROVAÇÃO",
+    "AG APRO. FOLHA",
+    "AG CONCLUSÃO",
+    "Encaminhado ao Fiscal"
+  ];
+
+  // ===== HELPERS =====
+  const $ = (sel) => document.querySelector(sel);
+  const todayISO = () => {
+    const d = new Date();
+    const tzOff = d.getTimezoneOffset() * 60000;
+    return new Date(d - tzOff).toISOString().slice(0,10);
+  };
+  const nowISO = () => {
+    const d = new Date();
+    const tzOff = d.getTimezoneOffset() * 60000;
+    return new Date(d - tzOff).toISOString().slice(0,19).replace("T"," ");
+  };
+  function normalizeStr(v){ return (v ?? "").toString().trim(); }
+  function normKey(v){ return normalizeStr(v).toLowerCase().replace(/\s+/g," "); }
+  function escapeHtml(str){
+    return normalizeStr(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+  function downloadFile(filename, content, mime){
+    const blob = new Blob([content], {type: mime});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a);
+    a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+  function isRayssaName(name){
+    const n = normalizeStr(name).toLowerCase();
+    return n === "rayssa" || n === "rayssa oliveira";
+  }
+  function parseAnalystBucket(analyst){
+    const raw = normalizeStr(analyst);
+    if(!raw) return null;
+    const parts = raw.split("/").map(s => s.trim()).filter(Boolean);
+    if(parts.length >= 2 && parts[0].toLowerCase().startsWith("rayssa")) return parts[1];
+    if(!isRayssaName(raw)) return raw;
+    return null;
+  }
+  function codStartsWith9(cod){
+    const v = normalizeStr(cod);
+    return v.length > 0 && v[0] === "9";
+  }
+  function newId(){ return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()); }
+
+  // ===== DAILY BACKUP HELPERS =====
+  function getDailyBackupDoneDate(){ return localStorage.getItem(DAILY_BACKUP_KEY) || ""; }
+  function setDailyBackupDoneDate(dateISO){ localStorage.setItem(DAILY_BACKUP_KEY, dateISO); }
+  function dailyBackupFilename(){ return `backup-registros_${todayISO()}.csv`; }
+
+  // ===== STATE =====
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw){
+        return { records: [], tickets: [], statusOptions: DEFAULT_STATUS, pendingStatuses: DEFAULT_PENDING, selectedAnalyst: null };
+      }
+      const p = JSON.parse(raw);
+      return {
+        records: Array.isArray(p.records) ? p.records : [],
+        tickets: Array.isArray(p.tickets) ? p.tickets : [],
+        statusOptions: Array.isArray(p.statusOptions) && p.statusOptions.length ? p.statusOptions : DEFAULT_STATUS,
+        pendingStatuses: Array.isArray(p.pendingStatuses) && p.pendingStatuses.length ? p.pendingStatuses : DEFAULT_PENDING,
+        selectedAnalyst: p.selectedAnalyst ?? null
+      };
+    }catch(e){
+      return { records: [], tickets: [], statusOptions: DEFAULT_STATUS, pendingStatuses: DEFAULT_PENDING, selectedAnalyst: null };
+    }
+  }
+  let state = loadState();
+  function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+
+  // ===== TABS =====
+  document.querySelectorAll(".tab[data-view]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const view = btn.dataset.view;
+      document.querySelectorAll(".tab[data-view]").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      $("#viewCadastro").style.display = view==="cadastro" ? "" : "none";
+      $("#viewPendencias").style.display = view==="pendencias" ? "" : "none";
+      $("#viewHistorico").style.display = view==="historico" ? "" : "none";
+      $("#viewChamados").style.display = view==="chamados" ? "" : "none";
+      $("#viewAnalistas").style.display = view==="analistas" ? "" : "none";
+      $("#viewConfig").style.display = view==="config" ? "" : "none";
+      renderAll();
+    });
+  });
+
+  // ===== FORM INPUTS =====
+  function getInput(field){
+    return Array.from(document.querySelectorAll("[data-field]"))
+      .find(el => el.dataset.field === field) || null;
+  }
+  function currentFormValue(field){ return normalizeStr(getInput(field)?.value); }
+
+  // ===== FORM BUILD =====
+  function buildForm(){
+    const form = $("#form");
+    form.innerHTML = "";
+    for(const fieldName of FIELDS){
+      const field = document.createElement("div");
+      field.className = "field";
+      const label = document.createElement("label");
+      label.textContent = fieldName;
+
+      let input;
+      if(fieldName === "DATA"){
+        input = document.createElement("input");
+        input.type = "date";
+        input.value = todayISO();
+      } else if(fieldName === "Analista"){
+        input = document.createElement("input");
+        input.type = "text";
+        input.value = "Rayssa";
+        input.placeholder = "Rayssa / Nome";
+      } else if(fieldName === "STATUS"){
+        input = document.createElement("select");
+        for(const optVal of state.statusOptions){
+          const opt = document.createElement("option");
+          opt.value = optVal;
+          opt.textContent = optVal;
+          input.appendChild(opt);
+        }
+        input.value = state.statusOptions[0] || "";
+      } else {
+        input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Digite...";
+      }
+      input.required = false;
+      input.dataset.field = fieldName;
+
+      field.appendChild(label);
+      field.appendChild(input);
+      form.appendChild(field);
+    }
+    wireDynamicLocks();
+    wireDuplicateWatcher();
+  }
+
+  function wireDuplicateWatcher(){
+    const cteEl = getInput("CT-E/SNF");
+    const trEl = getInput("Transportadora");
+    const handler = () => checkDuplicateUI();
+    ["input","change"].forEach(ev=>{
+      if(cteEl) cteEl.addEventListener(ev, handler);
+      if(trEl) trEl.addEventListener(ev, handler);
+    });
+  }
+
+  // ===== LOCKS =====
+  function wireDynamicLocks(){
+    const rcEl = getInput("Num_RC");
+    const pedEl = getInput("Num_Pedido");
+    const folhaEl = getInput("Num_Folha");
+    const codEl = getInput("COD.");
+    const chamadoEl = getInput("Nº Chamado");
+
+    function refresh(){
+      const rc = normalizeStr(rcEl.value);
+      pedEl.disabled = rc.length === 0;
+
+      const pedido = normalizeStr(pedEl.value);
+      folhaEl.disabled = pedido.length === 0;
+
+      const cod = normalizeStr(codEl.value);
+      const okChamado = codStartsWith9(cod);
+      chamadoEl.disabled = !okChamado;
+      if(!okChamado) chamadoEl.value = "";
+      checkDuplicateUI();
+    }
+
+    ["input","change"].forEach(ev=>{
+      rcEl.addEventListener(ev, refresh);
+      pedEl.addEventListener(ev, refresh);
+      codEl.addEventListener(ev, refresh);
+    });
+    refresh();
+  }
+
+  // ===== DUPLICIDADE =====
+  function findDuplicate(cte, transportadora, ignoreId=null){
+    const c = normKey(cte);
+    const t = normKey(transportadora);
+    if(!c || !t) return null;
+    return state.records.find(r =>
+      normKey(r["CT-E/SNF"]) === c &&
+      normKey(r["Transportadora"]) === t &&
+      r.__id !== ignoreId
+    ) || null;
+  }
+
+  function checkDuplicateUI(){
+    const mode = $("#btnSalvar").dataset.mode || "create";
+    const editingId = $("#btnSalvar").dataset.id || null;
+    const cte = currentFormValue("CT-E/SNF");
+    const tr = currentFormValue("Transportadora");
+    const dup = findDuplicate(cte, tr, mode==="update" ? editingId : null);
+
+    const isDup = !!dup && mode === "create";
+    $("#dupBox").style.display = isDup ? "" : "none";
+    $("#justField").style.display = isDup ? "" : "none";
+    if(!isDup) $("#dupJust").value = "";
+  }
+
+  // ===== SEQUENCE VALIDATION =====
+  function validateSequence(record){
+    const rc = normalizeStr(record["Num_RC"]);
+    const pedido = normalizeStr(record["Num_Pedido"]);
+    const folha = normalizeStr(record["Num_Folha"]);
+    if(pedido && !rc) return "Você não pode preencher Num_Pedido sem preencher Num_RC primeiro.";
+    if(folha && !pedido) return "Você não pode preencher Num_Folha sem preencher Num_Pedido primeiro.";
+    return null;
+  }
+
+  // ===== RECORD HELPERS =====
+  function readForm(){
+    const record = {};
+    for(const f of FIELDS) record[f] = currentFormValue(f);
+    record.__id = newId();
+    record.__createdAt = new Date().toISOString();
+    record.__analystBucket = parseAnalystBucket(record["Analista"]);
+    record.__dupJust = normalizeStr($("#dupJust").value);
+
+    // init audit
+    record["Editado_por"] = "";
+    record["Editado_em"] = "";
+    record["Editado_nº"] = "0";
+    record["Histórico_edits"] = "";
+    return record;
+  }
+
+  function clearForm(){
+    for(const f of FIELDS){
+      const el = getInput(f);
+      if(!el) continue;
+      if(f === "DATA") el.value = todayISO();
+      else if(f === "Analista") el.value = "Rayssa";
+      else if(f === "STATUS") el.value = state.statusOptions[0] || "";
+      else el.value = "";
+    }
+    $("#dupBox").style.display = "none";
+    $("#justField").style.display = "none";
+    $("#dupJust").value = "";
+    $("#btnSalvar").textContent = "Salvar Registro";
+    $("#btnSalvar").dataset.mode = "create";
+    $("#btnSalvar").dataset.id = "";
+    wireDynamicLocks();
+  }
+
+  // ===== STATUS =====
+  function statusTag(val){
+    const v = normalizeStr(val);
+    if(state.pendingStatuses.includes(v)) return `<span class="tag pending" title="${escapeHtml(v)}">${escapeHtml(v)}</span>`;
+    if(v.toUpperCase().includes("FINALIZADO")) return `<span class="tag done" title="${escapeHtml(v)}">${escapeHtml(v)}</span>`;
+    return `<span class="tag other" title="${escapeHtml(v)}">${escapeHtml(v)}</span>`;
+  }
+  function isPendingRecord(r){ return state.pendingStatuses.includes(normalizeStr(r["STATUS"])); }
+
+  // ===== TICKETS AUTO =====
+  function upsertTicketFromRecord(record){
+    const cod = normalizeStr(record["COD."]);
+    const numChamado = normalizeStr(record["Nº Chamado"]);
+    if(!numChamado) return;
+    if(!codStartsWith9(cod)) return;
+
+    const existing = state.tickets.find(t => normKey(t.num) === normKey(numChamado)) || null;
+    if(existing){
+      existing.date = normalizeStr(record["DATA"]) || todayISO();
+      existing.owner = normalizeStr(record["Analista"]) || "Rayssa";
+      existing.linkedCTE = normalizeStr(record["CT-E/SNF"]);
+      existing.updatedAt = new Date().toISOString();
+      return;
+    }
+    state.tickets.push({
+      id: newId(),
+      num: numChamado,
+      date: normalizeStr(record["DATA"]) || todayISO(),
+      title: `Chamado ${numChamado} • CT-E/SNF ${normalizeStr(record["CT-E/SNF"])}`,
+      desc: `Criado automaticamente a partir do registro (COD.: ${cod}).`,
+      owner: normalizeStr(record["Analista"]) || "Rayssa",
+      status: "ABERTO",
+      linkedCTE: normalizeStr(record["CT-E/SNF"]),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    });
+  }
+
+  // ===== SEARCH TEXT =====
+  function recordSearchText(r){
+    return [...FIELDS, ...AUDIT_FIELDS].map(f => normalizeStr(r[f])).join(" ").toLowerCase();
+  }
+
+  // ===== TABLE RENDER (NO LISTENERS HERE) =====
+  function renderTable(tableEl, records, options = {}){
+    const { searchText = "", dateExact = "", dateFrom = "", dateTo = "", filterFn = null } = options;
+    const s = normalizeStr(searchText).toLowerCase();
+    let list = [...records];
+
+    if(filterFn) list = list.filter(filterFn);
+    if(dateExact) list = list.filter(r => normalizeStr(r["DATA"]) === dateExact);
+    if(dateFrom) list = list.filter(r => normalizeStr(r["DATA"]) >= dateFrom);
+    if(dateTo) list = list.filter(r => normalizeStr(r["DATA"]) <= dateTo);
+    if(s) list = list.filter(r => recordSearchText(r).includes(s));
+
+    list.sort((a,b)=>{
+      const da = normalizeStr(a["DATA"]);
+      const db = normalizeStr(b["DATA"]);
+      if(da && db) return db.localeCompare(da);
+      return normalizeStr(b.__createdAt).localeCompare(normalizeStr(a.__createdAt));
+    });
+
+    let html = "<thead><tr>";
+    for(const f of FIELDS) html += `<th>${escapeHtml(f)}</th>`;
+    for(const f of AUDIT_FIELDS) html += `<th>${escapeHtml(f)}</th>`;
+    html += "<th>Ações</th></tr></thead><tbody>";
+
+    for(const r of list.slice(0, 350)){
+      html += "<tr>";
+      for(const f of FIELDS){
+        const val = normalizeStr(r[f]);
+        html += (f === "STATUS")
+          ? `<td>${statusTag(val)}</td>`
+          : `<td title="${escapeHtml(val)}">${escapeHtml(val)}</td>`;
+      }
+      for(const f of AUDIT_FIELDS){
+        const val = normalizeStr(r[f]);
+        html += `<td title="${escapeHtml(val)}">${escapeHtml(val)}</td>`;
+      }
+      html += `<td style="white-space:nowrap">
+        <button type="button" data-action="edit" data-id="${escapeHtml(r.__id)}">Editar</button>
+        <button type="button" class="danger" data-action="del" data-id="${escapeHtml(r.__id)}">Excluir</button>
+      </td></tr>`;
+    }
+
+    html += "</tbody>";
+    tableEl.innerHTML = html;
+  }
+
+  // ===== PILLS =====
+  function updatePills(){
+    const pendingCount = state.records.filter(isPendingRecord).length;
+    $("#pendingPill").innerHTML = `<b>${pendingCount}</b> pendências`;
+    $("#pendingPill").classList.toggle("danger", pendingCount > 0);
+
+    const openTickets = state.tickets.filter(t => normalizeStr(t.status).toUpperCase() !== "FECHADO").length;
+    $("#ticketsPill").innerHTML = `<b>${openTickets}</b> chamados abertos`;
+    $("#ticketsPill").classList.toggle("danger", openTickets > 0);
+
+    const done = getDailyBackupDoneDate() === todayISO();
+    $("#dailyPill").innerHTML = done ? `<b>Backup</b> OK` : `<b>Backup</b> pendente`;
+    $("#dailyPill").classList.toggle("danger", !done);
+  }
+
+  // ===== TICKETS LIST =====
+  function renderTickets(){
+    const s = normalizeStr($("#ticketSearch").value).toLowerCase();
+    const filter = $("#ticketFilter").value;
+
+    let list = [...state.tickets];
+    list.sort((a,b)=>{
+      const aOpen = normalizeStr(a.status).toUpperCase() !== "FECHADO";
+      const bOpen = normalizeStr(b.status).toUpperCase() !== "FECHADO";
+      if(aOpen !== bOpen) return aOpen ? -1 : 1;
+      return normalizeStr(b.date).localeCompare(normalizeStr(a.date));
+    });
+
+    if(filter === "ABERTOS") list = list.filter(t => normalizeStr(t.status).toUpperCase() !== "FECHADO");
+    if(filter === "FECHADOS") list = list.filter(t => normalizeStr(t.status).toUpperCase() === "FECHADO");
+
+    if(s){
+      list = list.filter(t => (
+        (t.num||"")+" "+(t.title||"")+" "+(t.desc||"")+" "+(t.owner||"")+" "+(t.status||"")+" "+(t.date||"")+" "+(t.linkedCTE||"")
+      ).toLowerCase().includes(s));
+    }
+
+    let html = "<thead><tr><th>Nº Chamado</th><th>Data</th><th>Título</th><th>Resp</th><th>Status</th><th>CT-E/SNF</th><th>Ações</th></tr></thead><tbody>";
+    for(const t of list.slice(0, 500)){
+      const isOpen = normalizeStr(t.status).toUpperCase() !== "FECHADO";
+      const tag = isOpen ? `<span class="tag pending">${escapeHtml(t.status)}</span>` : `<span class="tag done">${escapeHtml(t.status)}</span>`;
+      html += `<tr>
+        <td>${escapeHtml(t.num||"")}</td>
+        <td>${escapeHtml(t.date||"")}</td>
+        <td title="${escapeHtml(t.desc||"")}">${escapeHtml(t.title||"")}</td>
+        <td>${escapeHtml(t.owner||"")}</td>
+        <td>${tag}</td>
+        <td>${escapeHtml(t.linkedCTE||"")}</td>
+        <td style="white-space:nowrap">
+          <button type="button" class="danger" data-ta="del" data-id="${escapeHtml(t.id)}">Excluir</button>
+        </td>
+      </tr>`;
+    }
+    html += "</tbody>";
+    $("#tableTickets").innerHTML = html;
+  }
+
+  // ===== ANALYSTS =====
+  function getAnalystBuckets(){
+    const set = new Set();
+    for(const r of state.records){
+      const b = normalizeStr(r.__analystBucket);
+      if(b) set.add(b);
+    }
+    return Array.from(set).sort((a,b)=>a.localeCompare(b));
+  }
+
+  function renderAnalystButtons(){
+    const wrap = $("#analystButtons");
+    wrap.innerHTML = "";
+    const buckets = getAnalystBuckets();
+
+    if(!buckets.length){
+      wrap.innerHTML = `<span class="pill"><b>0</b> analistas extras</span>`;
+      return;
+    }
+
+    for(const b of buckets){
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tab";
+      btn.textContent = b;
+      btn.addEventListener("click", ()=>{ state.selectedAnalyst = b; saveState(); renderAll(); });
+      wrap.appendChild(btn);
+    }
+
+    const clear = document.createElement("button");
+    clear.type = "button";
+    clear.className = "tab";
+    clear.textContent = "Ver todos";
+    clear.addEventListener("click", ()=>{ state.selectedAnalyst = null; saveState(); renderAll(); });
+    wrap.appendChild(clear);
+  }
+
+  // ===== CONFIG =====
+  function renderConfig(){
+    $("#statusListText").value = state.statusOptions.join("\n");
+    $("#pendingStatusText").value = state.pendingStatuses.join("\n");
+  }
+
+  // ===== RENDER ALL =====
+  function renderAll(){
+    updatePills();
+
+    renderTable($("#tablePreview"), state.records, { searchText: $("#quickSearch").value || "" });
+
+    renderTable($("#tablePendencias"), state.records, {
+      searchText: $("#pendSearch").value || "",
+      dateExact: $("#pendDate").value || "",
+      filterFn: (r) => isPendingRecord(r)
+    });
+
+    renderTable($("#tableHistorico"), state.records, {
+      searchText: $("#histSearch").value || "",
+      dateFrom: $("#histFrom").value || "",
+      dateTo: $("#histTo").value || ""
+    });
+
+    renderTickets();
+    renderAnalystButtons();
+
+    const analystFilter = state.selectedAnalyst;
+    renderTable($("#tableAnalyst"), state.records, {
+      searchText: $("#analystSearch").value || "",
+      dateExact: $("#analystDate").value || "",
+      filterFn: (r) => analystFilter ? normalizeStr(r.__analystBucket) === analystFilter : !!normalizeStr(r.__analystBucket)
+    });
+
+    renderConfig();
+    ensureDailyBackupBanner(); // mantém o banner coerente
+  }
+
+  // ===== AUDIT / DIFF =====
+  function askEditorName(fallback){
+    const typed = normalizeStr(prompt("Quem está editando? (ex.: Rayssa, Tatiane)"));
+    return typed || normalizeStr(fallback) || "Desconhecido";
+  }
+  function diffSummary(oldRec, newRec){
+    const changes = [];
+    for(const f of FIELDS){
+      const a = normalizeStr(oldRec[f]);
+      const b = normalizeStr(newRec[f]);
+      if(a !== b) changes.push(`${f}: "${a}" -> "${b}"`);
+    }
+    return changes.join(" | ");
+  }
+
+  // ===== EXPORTS =====
+  function exportRecordsCSV(list, filename){
+    const extraCols = ["__dupJust","__analystBucket","__createdAt", ...AUDIT_FIELDS];
+    const header = [...FIELDS, ...extraCols].join(",");
+    const rows = list.map(r => {
+      return [...FIELDS, ...extraCols].map(col=>{
+        const v = normalizeStr(r[col]);
+        return '"' + v.replaceAll('"','""') + '"';
+      }).join(",");
+    });
+    downloadFile(filename, [header, ...rows].join("\n"), "text/csv;charset=utf-8");
+  }
+
+  function exportTicketsCSV(){
+    const cols = ["num","date","title","desc","owner","status","linkedCTE","createdAt","updatedAt"];
+    const header = cols.join(",");
+    const rows = state.tickets.map(t => cols.map(c=>{
+      const v = normalizeStr(t[c]);
+      return '"' + v.replaceAll('"','""') + '"';
+    }).join(","));
+    downloadFile("chamados.csv", [header, ...rows].join("\n"), "text/csv;charset=utf-8");
+  }
+
+  function exportAllJSON(){
+    downloadFile("backup_controle.json", JSON.stringify(state, null, 2), "application/json");
+  }
+
+  // ===== BACKUP DIÁRIO (CSV) =====
+  function doDailyBackupCSV(){
+    exportRecordsCSV(state.records, dailyBackupFilename());
+    setDailyBackupDoneDate(todayISO());
+    // some banner se estiver na tela
+    const banner = document.getElementById("dailyBackupBanner");
+    if(banner) banner.style.display = "none";
+    renderAll();
+  }
+
+  function ensureDailyBackupBanner(){
+    const done = getDailyBackupDoneDate() === todayISO();
+    let banner = document.getElementById("dailyBackupBanner");
+
+    if(done){
+      if(banner) banner.style.display = "none";
+      return;
+    }
+
+    if(banner){
+      banner.style.display = "";
+      const nameEl = banner.querySelector("[data-filename]");
+      if(nameEl) nameEl.textContent = dailyBackupFilename();
+      return;
+    }
+
+    banner = document.createElement("div");
+    banner.id = "dailyBackupBanner";
+    banner.className = "card";
+    banner.style.marginTop = "16px";
+    banner.innerHTML = `
+      <h2 style="margin:0 0 10px; font-size:14px; font-weight:950; display:flex; align-items:center; gap:10px;">
+        <span class="spark"></span> Backup do dia pendente (CSV)
+      </h2>
+      <div class="hint" style="margin-bottom:12px;">
+        Para não correr risco: faça o <b>backup do dia em CSV</b> (1 clique). Arquivo: <b data-filename>${dailyBackupFilename()}</b>
+      </div>
+      <div class="btns">
+        <button class="ok" id="btnDailyBackupCSV_banner" type="button">Backup do dia (CSV)</button>
+        <button id="btnLater" type="button">Depois</button>
+      </div>
+      <p class="small">Dica: sempre que trocar de PC/celular, use também “Backup JSON” + “Importar JSON”.</p>
+    `;
+
+    const main = document.querySelector("main.wrap");
+    if(main) main.prepend(banner);
+
+    document.getElementById("btnDailyBackupCSV_banner").addEventListener("click", doDailyBackupCSV);
+    document.getElementById("btnLater").addEventListener("click", ()=> banner.style.display = "none");
+  }
+
+  // ===== SAVE / UPDATE =====
+  $("#btnSalvar").addEventListener("click", ()=>{
+    const mode = $("#btnSalvar").dataset.mode || "create";
+    const editingId = $("#btnSalvar").dataset.id || null;
+
+    const rec = readForm();
+
+    const seqErr = validateSequence(rec);
+    if(seqErr){ alert(seqErr); return; }
+
+    const dup = findDuplicate(rec["CT-E/SNF"], rec["Transportadora"], mode==="update" ? editingId : null);
+    if(mode === "create" && dup){
+      const just = normalizeStr($("#dupJust").value);
+      if(!just){
+        alert("Duplicidade detectada. Justifique para salvar.");
+        $("#dupBox").style.display = "";
+        $("#justField").style.display = "";
+        return;
+      }
+      rec.__dupJust = just;
+    }
+
+    if(!codStartsWith9(rec["COD."])) rec["Nº Chamado"] = "";
+
+    if(mode === "create"){
+      state.records.push(rec);
+      upsertTicketFromRecord(rec);
+    } else {
+      const idx = state.records.findIndex(r => r.__id === editingId);
+      if(idx >= 0){
+        const old = state.records[idx];
+
+        rec.__id = old.__id;
+        rec.__createdAt = old.__createdAt;
+        rec.__analystBucket = parseAnalystBucket(rec["Analista"]);
+
+        const editor = askEditorName(rec["Analista"]);
+        const when = nowISO();
+        const count = parseInt(normalizeStr(old["Editado_nº"] || "0"), 10) || 0;
+        const diff = diffSummary(old, rec);
+        const line = `[${when}] ${editor} :: ${diff || "sem mudanças"}`;
+
+        rec["Editado_por"] = editor;
+        rec["Editado_em"] = when;
+        rec["Editado_nº"] = String(count + 1);
+        rec["Histórico_edits"] = normalizeStr(old["Histórico_edits"])
+          ? (normalizeStr(old["Histórico_edits"]) + "\n" + line)
+          : line;
+
+        state.records[idx] = rec;
+        upsertTicketFromRecord(rec);
+      }
+
+      $("#btnSalvar").textContent = "Salvar Registro";
+      $("#btnSalvar").dataset.mode = "create";
+      $("#btnSalvar").dataset.id = "";
+    }
+
+    saveState();
+    clearForm();
+    renderAll();
+  });
+
+  $("#btnLimpar").addEventListener("click", clearForm);
+
+  // ===== FILTERS =====
+  $("#quickSearch").addEventListener("input", renderAll);
+  $("#pendSearch").addEventListener("input", renderAll);
+  $("#histSearch").addEventListener("input", renderAll);
+  $("#pendDate").addEventListener("change", renderAll);
+  $("#histFrom").addEventListener("change", renderAll);
+  $("#histTo").addEventListener("change", renderAll);
+
+  $("#btnLimparPendDate").addEventListener("click", ()=>{ $("#pendDate").value = ""; renderAll(); });
+  $("#btnLimparHistDate").addEventListener("click", ()=>{ $("#histFrom").value = ""; $("#histTo").value = ""; renderAll(); });
+
+  $("#btnApagarTudo").addEventListener("click", ()=>{
+    const ok = prompt("Digite APAGAR para confirmar que quer apagar TODOS os registros:");
+    if(ok === "APAGAR"){
+      state.records = [];
+      saveState(); renderAll();
+    }
+  });
+
+  // ===== EXPORT BUTTONS =====
+  $("#btnDailyBackupCSV").addEventListener("click", doDailyBackupCSV);
+
+  $("#btnExportCSV").addEventListener("click", ()=> exportRecordsCSV(state.records, "registros.csv"));
+  $("#btnExportJSON").addEventListener("click", exportAllJSON);
+
+  $("#btnExportRegCSV").addEventListener("click", ()=> exportRecordsCSV(state.records, "registros.csv"));
+  $("#btnExportAllJSON").addEventListener("click", exportAllJSON);
+  $("#btnExportAllJSON2").addEventListener("click", exportAllJSON);
+  $("#btnExportAllJSON3").addEventListener("click", exportAllJSON);
+
+  $("#btnExportPendCSV").addEventListener("click", ()=>{
+    exportRecordsCSV(state.records.filter(isPendingRecord), "pendencias.csv");
+  });
+
+  $("#btnExportHistCSV").addEventListener("click", ()=>{
+    const s = normalizeStr($("#histSearch").value).toLowerCase();
+    const from = normalizeStr($("#histFrom").value);
+    const to = normalizeStr($("#histTo").value);
+    let list = [...state.records];
+    if(from) list = list.filter(r => normalizeStr(r["DATA"]) >= from);
+    if(to) list = list.filter(r => normalizeStr(r["DATA"]) <= to);
+    if(s) list = list.filter(r => recordSearchText(r).includes(s));
+    exportRecordsCSV(list, "historico.csv");
+  });
+
+  $("#btnExportTicketsCSV").addEventListener("click", exportTicketsCSV);
+
+  $("#btnExportAnalystCSV").addEventListener("click", ()=>{
+    const s = normalizeStr($("#analystSearch").value).toLowerCase();
+    const dateExact = normalizeStr($("#analystDate").value);
+    const analystFilter = state.selectedAnalyst;
+
+    let list = [...state.records].filter(r => analystFilter ? normalizeStr(r.__analystBucket) === analystFilter : !!normalizeStr(r.__analystBucket));
+    if(dateExact) list = list.filter(r => normalizeStr(r["DATA"]) === dateExact);
+    if(s) list = list.filter(r => recordSearchText(r).includes(s));
+    exportRecordsCSV(list, "analistas.csv");
+  });
+
+  // ===== IMPORT JSON =====
+  $("#importJSON").addEventListener("change", async (ev)=>{
+    const file = ev.target.files && ev.target.files[0];
+    if(!file) return;
+    const text = await file.text();
+    try{
+      const imported = JSON.parse(text);
+      if(!imported || typeof imported !== "object") throw new Error("Arquivo inválido.");
+
+      state.records = Array.isArray(imported.records) ? imported.records : state.records;
+      state.tickets = Array.isArray(imported.tickets) ? imported.tickets : state.tickets;
+      state.statusOptions = Array.isArray(imported.statusOptions) && imported.statusOptions.length ? imported.statusOptions : state.statusOptions;
+      state.pendingStatuses = Array.isArray(imported.pendingStatuses) && imported.pendingStatuses.length ? imported.pendingStatuses : state.pendingStatuses;
+      state.selectedAnalyst = imported.selectedAnalyst ?? null;
+
+      saveState();
+      buildForm();
+      renderAll();
+      alert("Backup importado com sucesso!");
+    }catch(e){
+      alert("Falha ao importar JSON: " + e.message);
+    }finally{
+      ev.target.value = "";
+    }
+  });
+
+  // ===== TICKETS FORM =====
+  $("#tDate").value = todayISO();
+  $("#tOwner").value = "Rayssa";
+  $("#ticketSearch").addEventListener("input", renderAll);
+  $("#ticketFilter").addEventListener("change", renderAll);
+
+  $("#btnTicketSave").addEventListener("click", ()=>{
+    const num = normalizeStr($("#tNum").value);
+    const date = normalizeStr($("#tDate").value);
+    const title = normalizeStr($("#tTitle").value);
+    const desc = normalizeStr($("#tDesc").value);
+    const owner = normalizeStr($("#tOwner").value);
+    const status = normalizeStr($("#tStatus").value);
+
+    if(!num || !date || !title || !desc || !owner || !status){
+      alert("Preencha todos os campos do chamado.");
+      return;
+    }
+
+    const existing = state.tickets.find(t => normKey(t.num) === normKey(num)) || null;
+    if(existing){
+      existing.date = date; existing.title = title; existing.desc = desc; existing.owner = owner; existing.status = status;
+      existing.updatedAt = new Date().toISOString();
+    }else{
+      state.tickets.push({
+        id: newId(),
+        num, date, title, desc, owner, status,
+        linkedCTE: "",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+    }
+
+    saveState();
+    $("#tNum").value = "";
+    $("#tDate").value = todayISO();
+    $("#tTitle").value = "";
+    $("#tDesc").value = "";
+    $("#tOwner").value = "Rayssa";
+    $("#tStatus").value = "ABERTO";
+    renderAll();
+  });
+
+  $("#btnTicketClear").addEventListener("click", ()=>{
+    $("#tNum").value = "";
+    $("#tDate").value = todayISO();
+    $("#tTitle").value = "";
+    $("#tDesc").value = "";
+    $("#tOwner").value = "Rayssa";
+    $("#tStatus").value = "ABERTO";
+  });
+
+  // ===== ANALYST FILTERS =====
+  $("#analystSearch").addEventListener("input", renderAll);
+  $("#analystDate").addEventListener("change", renderAll);
+  $("#btnAnalystClearDate").addEventListener("click", ()=>{ $("#analystDate").value = ""; renderAll(); });
+
+  // ===== CONFIG APPLY =====
+  $("#btnApplyConfig").addEventListener("click", ()=>{
+    const statusList = $("#statusListText").value.split("\n").map(s=>s.trim()).filter(Boolean);
+    const pendingList = $("#pendingStatusText").value.split("\n").map(s=>s.trim()).filter(Boolean);
+    if(!statusList.length){ alert("A lista de STATUS não pode ficar vazia."); return; }
+    if(!pendingList.length){ alert("A lista de PENDÊNCIAS não pode ficar vazia."); return; }
+    state.statusOptions = statusList;
+    state.pendingStatuses = pendingList;
+    saveState();
+    buildForm();
+    renderAll();
+    alert("Status aplicados!");
+  });
+
+  $("#btnResetStatus").addEventListener("click", ()=>{
+    state.statusOptions = [...DEFAULT_STATUS];
+    state.pendingStatuses = [...DEFAULT_PENDING];
+    saveState();
+    buildForm();
+    renderAll();
+  });
+
+  // ===== EVENT DELEGATION (FIX EDIT) =====
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    if (!id || !action) return;
+
+    if (action === "del") {
+      if (confirm("Excluir este registro?")) {
+        state.records = state.records.filter(x => x.__id !== id);
+        saveState();
+        renderAll();
+      }
+      return;
+    }
+
+    if (action === "edit") {
+      const rec = state.records.find(x => x.__id === id);
+      if (!rec) { alert("Registro não encontrado."); return; }
+
+      document.querySelectorAll(".tab[data-view]").forEach(b => b.classList.remove("active"));
+      document.querySelector('.tab[data-view="cadastro"]').classList.add("active");
+      $("#viewCadastro").style.display = "";
+      $("#viewPendencias").style.display = "none";
+      $("#viewHistorico").style.display = "none";
+      $("#viewChamados").style.display = "none";
+      $("#viewAnalistas").style.display = "none";
+      $("#viewConfig").style.display = "none";
+
+      for (const f of FIELDS) {
+        const el = getInput(f);
+        if (el) el.value = normalizeStr(rec[f]);
+      }
+
+      $("#dupBox").style.display = "none";
+      $("#justField").style.display = "none";
+      $("#dupJust").value = "";
+
+      $("#btnSalvar").textContent = "Atualizar Registro";
+      $("#btnSalvar").dataset.mode = "update";
+      $("#btnSalvar").dataset.id = rec.__id;
+
+      wireDynamicLocks();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  // ===== TICKETS DELETE (delegation) =====
+  document.addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-ta='del']");
+    if(!btn) return;
+    const id = btn.dataset.id;
+    if(!id) return;
+    if(confirm("Excluir este chamado?")){
+      state.tickets = state.tickets.filter(x=>x.id !== id);
+      saveState(); renderAll();
+    }
+  });
+
+  // ===== INIT =====
+  buildForm();
+  clearForm();
+  renderAll();
+</script>
+</body>
+</html>

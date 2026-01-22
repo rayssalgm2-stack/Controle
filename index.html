@@ -294,7 +294,7 @@
       <h2><span class="spark"></span> Novo Registro</h2>
 
       <div class="hint">
-        Regras: <b>Pedido só após RC</b> • <b>Folha só após Pedido</b> • <b>Nº Chamado só se COD. começar com 9</b>.
+        Regras: <b>Pedido só após RC</b> • <b>Folha só após Pedido</b> • <b>Nº Chamado só se COD. começar com 7</b>.
         Edição livre + auditoria (quem editou e quando).
       </div>
 
@@ -606,7 +606,7 @@ function parseAnalystBucket(analyst){
   }
   function codStartsWith9(cod){
     const v = normalizeStr(cod);
-    return v.length > 0 && v[0] === "9";
+    return v.length > 0 && v[0] === "7";
   }
   function newId(){ return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()); }
 
@@ -1425,6 +1425,7 @@ function parseAnalystBucket(analyst){
 </script>
 </body>
 </html>
+
 
 
 

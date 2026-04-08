@@ -352,7 +352,8 @@
         <input id="pendSearch" placeholder="Buscar nas pendências..." />
         <input id="pendDate" type="date" />
         <button id="btnLimparPendDate" type="button">Limpar data</button>
-        <button class="ok" id="btnExportPendCSV" type="button">Baixar Pendências (CSV)</button>
+       <button class="ok" id="btnExportPendCSV" type="button">Baixar Pendências (CSV)</button>
+<button id="btnExportPendJSON" type="button">Baixar Pendências (JSON)</button>
       </div>
       <div class="hr"></div>
       <div class="tableWrap"><table id="tablePendencias"></table></div>
@@ -1226,7 +1227,20 @@ function parseAnalystBucket(analyst){
 
   $("#btnExportPendCSV").addEventListener("click", ()=>{
     exportRecordsCSV(state.records.filter(isPendingRecord), "pendencias.csv");
-  });
+    $("#btnExportPendJSON").addEventListener("click", ()=>{
+  const pendentes = state.records.filter(isPendingRecord);
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    total: pendentes.length,
+    records: pendentes
+  };
+  downloadFile(
+    `pendencias_${todayISO()}.json`,
+    JSON.stringify(payload, null, 2),
+    "application/json"
+  );
+});
+ 
 
   $("#btnExportHistCSV").addEventListener("click", ()=>{
     const s = normalizeStr($("#histSearch").value).toLowerCase();
